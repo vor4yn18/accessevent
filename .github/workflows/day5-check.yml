@@ -1,0 +1,17 @@
+name: Day5 Check
+on: push
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Установка зависимостей
+        run: pip install -r requirements.txt
+      - name: Запуск тестов
+        env:
+          TESTING: '1'
+        run: pytest -v
+Почему тесты проходят без PostgreSQL: TESTING=1 включает SQLite in-memory из config.py.
