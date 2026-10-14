@@ -1,0 +1,85 @@
+Table users {
+  id int [pk, increment]
+  username varchar(50) [not null, unique]
+  email varchar(120) [not null, unique]
+  password_hash varchar(255) [not null]
+  role varchar(20) [not null, default: 'user']
+  is_deaf boolean [default: false]
+}
+ 
+Table categories {
+  id int [pk, increment]
+  name varchar(50) [not null, unique]
+}
+ 
+Table events {
+  id int [pk, increment]
+  title varchar(100) [not null]
+  description text
+  event_date timestamp [not null]
+  location varchar(200)
+  is_inclusive boolean [default: false]
+  status varchar(20) [not null, default: 'active']
+  organizer_id int [not null]
+  created_at timestamp [default: `now()`]
+}
+ 
+Table event_categories {
+  event_id int
+  category_id int
+  indexes {
+    (event_id, category_id) [pk]
+  }
+}
+ 
+Table registrations {
+  id int [pk, increment]
+  user_id int [not null]
+  event_id int [not null]
+  status varchar(20) [not null, default: 'pending']
+  created_at timestamp [default: `now()`]
+  indexes {
+    (user_id, event_id) [unique]
+  }
+}
+ 
+Table notifications {
+  id int [pk, increment]
+  user_id int [not null]
+  event_id int
+  type varchar(20) [not null, default: 'info']
+  message text [not null]
+  is_read boolean [default: false]
+  created_at timestamp [default: `now()`]
+}
+ 
+Table reviews {
+  id int [pk, increment]
+  user_id int [not null]
+  event_id int [not null]
+  rating int [not null]
+  comment text
+  indexes {
+    (user_id, event_id) [unique]
+  }
+}
+ 
+Table chat_messages {
+  id int [pk, increment]
+  event_id int [not null]
+  user_id int [not null]
+  message text [not null]
+  created_at timestamp [default: `now()`]
+}
+ 
+Ref: events.organizer_id > users.id
+Ref: event_categories.event_id > events.id
+Ref: event_categories.category_id > categories.id
+Ref: registrations.user_id > users.id
+Ref: registrations.event_id > events.id
+Ref: notifications.user_id > users.id
+Ref: notifications.event_id > events.id
+Ref: reviews.user_id > users.id
+Ref: reviews.event_id > events.id
+Ref: chat_messages.event_id > events.id
+Ref: chat_messages.user_id > users.id
