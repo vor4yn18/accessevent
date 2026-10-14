@@ -1,0 +1,20 @@
+name: Day2 Check
+on: push
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Проверка файлов Day 2
+        run: |
+          test -f docs/architecture.md || { echo "FAIL: нет architecture.md"; exit 1; }
+          test -f docs/schema.sql || { echo "FAIL: нет schema.sql"; exit 1; }
+          test -f docs/er_diagram.png || { echo "FAIL: нет er_diagram.png"; exit 1; }
+          test -f docs/security.md || { echo "FAIL: нет security.md"; exit 1; }
+          count=$(grep -ci "CREATE TABLE" docs/schema.sql)
+          [ "$count" -ge 7 ] || { echo "FAIL: таблиц $count, нужно минимум 7"; exit 1; }
+          fk=$(grep -c "REFERENCES" docs/schema.sql)
+          [ "$fk" -ge 5 ] || { echo "FAIL: внешних ключей $fk, нужно минимум 5"; exit 1; }
+          grep -q "MVC" docs/architecture.md || { echo "FAIL: нет слова MVC"; exit 1; }
+          grep -q "is_deaf" docs/security.md || { echo "FAIL: нет is_deaf в security.md"; exit 1; }
+          echo "Все проверки Day 2 пройдены успешно!"
