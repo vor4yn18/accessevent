@@ -1,0 +1,18 @@
+name: Day1 Check
+on: push
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Проверка документов Day 1
+        run: |
+          test -f README.md || { echo "FAIL: нет README.md"; exit 1; }
+          test -f docs/analysis.md || { echo "FAIL: нет docs/analysis.md"; exit 1; }
+          test -f docs/requirements.md || { echo "FAIL: нет docs/requirements.md"; exit 1; }
+          test -f docs/stakeholders.md || { echo "FAIL: нет docs/stakeholders.md"; exit 1; }
+          test -f docs/tz.md || { echo "FAIL: нет docs/tz.md"; exit 1; }
+          grep -q "FR-" docs/requirements.md || { echo "FAIL: нет требований FR"; exit 1; }
+          grep -q "NFR-" docs/requirements.md || { echo "FAIL: нет NFR"; exit 1; }
+          grep -q "US-" docs/requirements.md || { echo "FAIL: нет User Stories"; exit 1; }
+          echo "Все проверки Day 1 пройдены успешно!"
