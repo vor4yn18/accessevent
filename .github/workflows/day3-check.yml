@@ -1,0 +1,24 @@
+name: Day3 Check
+on: push
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Проверка файлов Day 3
+        run: |
+          test -f app.py || { echo "FAIL: нет app.py"; exit 1; }
+          test -f config.py || { echo "FAIL: нет config.py"; exit 1; }
+          test -f models.py || { echo "FAIL: нет models.py"; exit 1; }
+          test -f requirements.txt || { echo "FAIL: нет requirements.txt"; exit 1; }
+          test -f routes/auth.py || { echo "FAIL: нет routes/auth.py"; exit 1; }
+          test -f routes/events.py || { echo "FAIL: нет routes/events.py"; exit 1; }
+          test -f routes/registrations.py || { echo "FAIL: нет routes/registrations.py"; exit 1; }
+          echo "Все проверки Day 3 пройдены успешно!"
+      - name: Синтаксис Python
+        run: |
+          python -m pip install -r requirements.txt
+          python -m compileall app.py config.py models.py routes utils
