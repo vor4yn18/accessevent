@@ -1,0 +1,20 @@
+name: Day4 Check
+on: push
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Файлы контейнеризации
+        run: |
+          test -f Dockerfile || { echo "FAIL: нет Dockerfile"; exit 1; }
+          test -f docker-compose.yml || { echo "FAIL: нет docker-compose.yml"; exit 1; }
+          docker compose config -q && echo "compose валиден" || { echo "FAIL: compose невалиден"; exit 1; }
+      - name: Файлы интерфейса
+        run: |
+          test -f templates/base.html || { echo "FAIL: нет base.html"; exit 1; }
+          test -f templates/event_detail.html || { echo "FAIL: нет event_detail.html"; exit 1; }
+          test -f static/css/style.css || { echo "FAIL: нет style.css"; exit 1; }
+          grep -q "aria-" templates/base.html || { echo "FAIL: нет ARIA-атрибутов"; exit 1; }
+          grep -q "#5cb85c" static/css/style.css || { echo "FAIL: нет зелёного статуса"; exit 1; }
+          echo "Все проверки Day 4 пройдены успешно!"
