@@ -27,4 +27,4 @@ Python 3.11, Flask, PostgreSQL 16, срок 6 дней, бесплатные с�
  
 ## 8. Справочные документы
 docs/analysis.md, docs/requirements.md, docs/stakeholders.md,
-docs/architecture.md, docs/schema.sql.
+docs/architecture.md, docs/schema.sql
